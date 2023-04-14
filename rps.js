@@ -1,3 +1,5 @@
+const WINS_TO_END = 5;
+
 /**
  * Randomly select rock, paper, or scissors.
  * @returns {string} a string containing either rock, paper, or scissors
@@ -54,7 +56,6 @@ function getPlayerChoice() {
  * @returns {void}
  */
 function game() {
-    const WINS_TO_END = 5;
     let playerWins = 0;
     let computerWins = 0;
     while (Math.max(playerWins, computerWins) < WINS_TO_END) {
@@ -71,16 +72,47 @@ function game() {
             console.log(`You tied! Player ${playerWins}-${computerWins} Computer`);
         }
     }
-    if (playerWins == 5) {
+    if (playerWins == WINS_TO_END) {
         console.log("Congratulations, you won!");
     } else {
         console.log("The computer wins - better luck next time!");
     }
 }
 
+let resultDiv = document.createElement("div");
+resultDiv.style.paddingTop = "32px";
+resultDiv.style.whiteSpace = "pre-line";
+let body = document.querySelector("body");
+body.appendChild(resultDiv);
+
+let playerWins = 0;
+let computerWins = 0;
+function gameWithButtons(playerChoice) {
+    if (Math.max(playerWins, computerWins) >= WINS_TO_END) {
+        return;
+    }
+    let computerChoice = getComputerChoice()
+    let result = playRound(playerChoice, computerChoice);
+    if (result>0) {
+        playerWins++;
+        resultDiv.textContent = `You win! ${playerChoice} beats ${computerChoice}. Player ${playerWins}-${computerWins} Computer`;
+    } else if (result<0) {
+        computerWins++;
+        resultDiv.textContent = `You lose! ${computerChoice} beats ${playerChoice}. Player ${playerWins}-${computerWins} Computer`;
+    } else {
+        resultDiv.textContent = `You tied! Player ${playerWins}-${computerWins} Computer`;
+    }
+    
+    if (playerWins == WINS_TO_END) {
+        resultDiv.textContent += "\n\nCongratulations, you won!";
+    } else if (computerWins == WINS_TO_END) {
+        resultDiv.textContent += "\n\nThe computer wins - better luck next time!";
+    }
+}
+
 let btns = document.querySelectorAll("button");
 btns.forEach((btn) => {
     btn.addEventListener("click", (b) => {
-        console.log(b.target.textContent);
+        gameWithButtons(b.target.textContent);
     });
 });
