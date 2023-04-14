@@ -78,4 +78,9 @@ function game() {
     }
 }
 
-game();
+let btns = document.querySelectorAll("button");
+btns.forEach((btn) => {
+    btn.addEventListener("click", (b) => {
+        console.log(b.target.textContent);
+    });
+});
