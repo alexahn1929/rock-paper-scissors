@@ -25,7 +25,7 @@ function getComputerChoice() {
  * Determines the result of a rock-paper-scissors game based on the player and computer selections.
  * @param {string} playerSelection
  * @param {string} computerSelection 
- * @returns {string} a string saying whether the player won, lost, or tied
+ * @returns {number} 1 if the player won, -1 if the player lost, 0 if the player tied
  */
 function playRound(playerSelection, computerSelection) {
     const beats = {
@@ -34,11 +34,11 @@ function playRound(playerSelection, computerSelection) {
         "Rock" : "Scissors"
     };
     if (beats[playerSelection] === computerSelection) {
-        return `You win! ${playerSelection} beats ${computerSelection}.`;
+        return 1;
     } else if (beats[computerSelection] === playerSelection) {
-        return `You lose! ${computerSelection} beats ${playerSelection}.`;
+        return -1;
     } else {
-        return `You tied!`;
+        return 0;
     }
 }
 
@@ -58,16 +58,21 @@ function game() {
     let playerWins = 0;
     let computerWins = 0;
     while (Math.max(playerWins, computerWins) < WINS_TO_END) {
-        let result = playRound(getPlayerChoice(), getComputerChoice());
-        if (result.includes("win")) {
-            playerWins += 1;
-        } else if (result.includes("lose")) {
-            computerWins += 1;
+        let playerChoice = getPlayerChoice();
+        let computerChoice = getComputerChoice();
+        let result = playRound(playerChoice, computerChoice);
+        if (result>0) {
+            playerWins++;
+            console.log(`You win! ${playerChoice} beats ${computerChoice}. Player ${playerWins}-${computerWins} Computer`);
+        } else if (result<0) {
+            computerWins++;
+            console.log(`You lose! ${computerChoice} beats ${playerChoice}. Player ${playerWins}-${computerWins} Computer`);
+        } else {
+            console.log(`You tied! Player ${playerWins}-${computerWins} Computer`);
         }
-        console.log(result);
     }
     if (playerWins == 5) {
-        console.log("Congratulations, you beat the computer!");
+        console.log("Congratulations, you won!");
     } else {
         console.log("The computer wins - better luck next time!");
     }
